@@ -1,0 +1,5 @@
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\ControllerLib\bin\Debug\ControllerLib.dll
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\ControllerLib\bin\Debug\ControllerLib.pdb
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\ControllerLib\bin\Debug\MySql.Data.dll
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\ControllerLib\obj\Debug\ControllerLib.dll
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\ControllerLib\obj\Debug\ControllerLib.pdb
