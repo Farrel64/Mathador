@@ -19,14 +19,14 @@ namespace ControllerLib
         public void insertResult(string nickname, int score)
         {
             string _connStr = @"Data Source=localhost; Database=Mathador; User ID=root; Password=''";
-            string _query = "INSERT INTO user_data (nickname,score,date) values(@nick,@score,now())";
+            string _query = "INSERT INTO user_data (pseudo,score,date) values(@pseudo,@score,now())";
             using (MySqlConnection conn = new MySqlConnection(_connStr))
             {
                 using (MySqlCommand comm = new MySqlCommand())
                 {
                     comm.Connection = conn;
                     comm.CommandText = _query;
-                    comm.Parameters.AddWithValue("@nick", nickname);
+                    comm.Parameters.AddWithValue("@pseudo", nickname);
                     comm.Parameters.AddWithValue("@score", score);
                     try
                     {

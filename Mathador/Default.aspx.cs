@@ -16,10 +16,35 @@ namespace Mathador
         private Controller controller = new Controller();
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (this.IsPostBack)
             {
-
+                Button6.Text += "Page Posted Back.<br/>";
             }
+            else
+            {
+                Button6.Text += "page Created.<br/>";
+            }
+
+            if (Cache["testitem"] == null)
+            {
+                Button6.Text += "Creating test item.<br/>";
+                DateTime testItem = DateTime.Now;
+                Button6.Text += "Storing test item in cache ";
+                Button6.Text += "for 30 seconds.<br/>";
+                Cache.Insert("testitem", testItem, null,
+                DateTime.Now.AddSeconds(30), TimeSpan.Zero);
+            }
+            else
+            {
+                Button6.Text += "Retrieving test item.<br/>";
+                Cache["testitem"] = "mdr";
+                String testItem = (String)Cache["testitem"];
+                Button6.Text += "Test item is: " + testItem.ToString();
+                Button6.Text += "<br/>";
+            }
+
+            Button6.Text += "<br/>";
+
         }
 
         protected void ajouterPile(object sender, EventArgs e)
