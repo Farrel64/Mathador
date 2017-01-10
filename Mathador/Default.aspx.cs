@@ -6,6 +6,7 @@ using System.Web.UI;
 using MySql.Data.MySqlClient;
 using System.Web.UI.WebControls;
 using ControllerLib;
+using MoteurLib;
 
 namespace Mathador
 {
@@ -14,8 +15,14 @@ namespace Mathador
     {
 
         private Controller controller = new Controller();
+        private Moteur moteur = new Moteur();
         protected void Page_Load(object sender, EventArgs e)
         {
+            List<int> mdr = moteur.getRandomNumbers();
+            int final = moteur.getTargetNumber();
+
+            Button6.Text = String.Join(", ", mdr.ToArray());
+            Button6.Text += final;
             if (this.IsPostBack)
             {
                 Button6.Text += "Page Posted Back.<br/>";

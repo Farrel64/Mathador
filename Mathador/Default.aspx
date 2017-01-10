@@ -12,11 +12,11 @@
     </div>
 
     <div class="row">
-        <asp:Button ID="Button2" runat="server" OnClick="ajouterPile" Text="3" />
-        <asp:Button ID="Button3" runat="server" OnClick="ajouterPile" Text="6" />
-        <asp:Button ID="Button4" runat="server" OnClick="ajouterPile" Text="2" />        
-        <asp:Button ID="Button5" runat="server" OnClick="ajouterPile" Text="12" />
-        <asp:Button ID="Button6" runat="server" OnClick="ajouterPile" Text="16" />
+        <asp:Button ID="Button2" runat="server" OnClick="ajouterPile" />
+        <asp:Button ID="Button3" runat="server" OnClick="ajouterPile" />
+        <asp:Button ID="Button4" runat="server" OnClick="ajouterPile" />        
+        <asp:Button ID="Button5" runat="server" OnClick="ajouterPile" />
+        <asp:Button ID="Button6" runat="server" OnClick="ajouterPile" />
     </div>
 
     <div class="row">

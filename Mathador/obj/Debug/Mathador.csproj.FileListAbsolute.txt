@@ -136,3 +136,5 @@ C:\Users\Tcharly\Desktop\Mathador\Mathador\bin\Microsoft.Owin.Security.OAuth.xml
 C:\Users\Tcharly\Desktop\Mathador\Mathador\obj\Debug\Mathador.csprojResolveAssemblyReference.cache
 C:\Users\Tcharly\Desktop\Mathador\Mathador\obj\Debug\Mathador.dll
 C:\Users\Tcharly\Desktop\Mathador\Mathador\obj\Debug\Mathador.pdb
+C:\Users\Tcharly\Desktop\Mathador\Mathador\bin\MoteurLib.dll
+C:\Users\Tcharly\Desktop\Mathador\Mathador\bin\MoteurLib.pdb

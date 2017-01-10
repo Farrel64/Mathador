@@ -8,10 +8,9 @@ namespace MoteurLib
 {
     public class Moteur
     {
-        List<int> randList = new List<int>();
-
-        private void getRandomNumbers(List<int> randList)
+        public List<int> getRandomNumbers()
         {
+            List<int> randList = new List<int>();
             Random rand = new Random();
             for (int i = 0; i < 5; i++)
             {
@@ -20,11 +19,12 @@ namespace MoteurLib
                 else if (i >= 3 && i < 5)
                     randList.Add(rand.Next(1, 21));
             }
-            this.getTargetNumber(randList);
+            return randList;
         }
 
-        private int getTargetNumber(List<int> random)
+        public int getTargetNumber()
         {
+            List<int> random = this.getRandomNumbers();
             List<int> newList = new List<int>(random);
             Random rand = new Random();
             int randCalcul = rand.Next(2, 6);
