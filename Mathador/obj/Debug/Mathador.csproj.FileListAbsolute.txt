@@ -138,3 +138,5 @@ C:\Users\Tcharly\Desktop\Mathador\Mathador\obj\Debug\Mathador.dll
 C:\Users\Tcharly\Desktop\Mathador\Mathador\obj\Debug\Mathador.pdb
 C:\Users\Tcharly\Desktop\Mathador\Mathador\bin\MoteurLib.dll
 C:\Users\Tcharly\Desktop\Mathador\Mathador\bin\MoteurLib.pdb
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\Mathador\bin\MoteurLib.dll
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\Mathador\bin\MoteurLib.pdb

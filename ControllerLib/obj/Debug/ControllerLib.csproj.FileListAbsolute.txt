@@ -9,3 +9,4 @@ C:\Users\Tcharly\Desktop\Mathador\ControllerLib\bin\Debug\MySql.Data.dll
 C:\Users\Tcharly\Desktop\Mathador\ControllerLib\obj\Debug\ControllerLib.csprojResolveAssemblyReference.cache
 C:\Users\Tcharly\Desktop\Mathador\ControllerLib\obj\Debug\ControllerLib.dll
 C:\Users\Tcharly\Desktop\Mathador\ControllerLib\obj\Debug\ControllerLib.pdb
+C:\Users\Thomas\Documents\Travail\dotNet\Mathador\ControllerLib\obj\Debug\ControllerLib.csprojResolveAssemblyReference.cache

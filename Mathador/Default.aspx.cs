@@ -13,44 +13,38 @@ namespace Mathador
 
     public partial class _Default : Page
     {
-
+        private Stack<String> pile = new Stack<String>();
         private Controller controller = new Controller();
         private Moteur moteur = new Moteur();
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<int> mdr = moteur.getRandomNumbers();
-            int final = moteur.getTargetNumber();
-
-            Button6.Text = String.Join(", ", mdr.ToArray());
-            Button6.Text += final;
-            if (this.IsPostBack)
+            if (Cache["values"] == null)
             {
-                Button6.Text += "Page Posted Back.<br/>";
-            }
-            else
-            {
-                Button6.Text += "page Created.<br/>";
+                List<int> initialValues = moteur.getRandomNumbers();
+                Cache.Insert("values", initialValues, null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
             }
 
-            if (Cache["testitem"] == null)
+            List<int> values = (List<int>)Cache["values"];
+            Button2.Text = Convert.ToString(values[0]);
+            Button3.Text = Convert.ToString(values[1]);
+            Button4.Text = Convert.ToString(values[2]);
+            Button5.Text = Convert.ToString(values[3]);
+            Button6.Text = Convert.ToString(values[4]);
+
+            if (Cache["solution"] == null)
             {
-                Button6.Text += "Creating test item.<br/>";
-                DateTime testItem = DateTime.Now;
-                Button6.Text += "Storing test item in cache ";
-                Button6.Text += "for 30 seconds.<br/>";
-                Cache.Insert("testitem", testItem, null,
-                DateTime.Now.AddSeconds(30), TimeSpan.Zero);
-            }
-            else
-            {
-                Button6.Text += "Retrieving test item.<br/>";
-                Cache["testitem"] = "mdr";
-                String testItem = (String)Cache["testitem"];
-                Button6.Text += "Test item is: " + testItem.ToString();
-                Button6.Text += "<br/>";
+                int solution = moteur.getTargetNumber();
+                Cache.Insert("solution", solution, null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                Button6.Text = Convert.ToString(solution);
             }
 
-            Button6.Text += "<br/>";
+            if(Cache["pile"] == null)
+            {
+                Cache.Insert("pile", pile, null,
+                    DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+            }
 
         }
 
@@ -59,7 +53,23 @@ namespace Mathador
             Button senderButton = (Button)sender;
             try
             {
-                controller.ajouterPile(senderButton.Text);
+                pile = (Stack<String>)Cache["pile"];
+                pile.Push(senderButton.Text);
+                Cache.Insert("pile", pile, null,
+                    DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                if (pile.Count == 3)
+                {
+                    int result = controller.calculerPile(pile);
+
+                    List<int> myValues = (List<int>)Cache["values"];
+                    myValues.Remove(Convert.ToInt32(pile.Pop()));
+                    pile.Pop();
+                    myValues.Remove(Convert.ToInt32(pile.Pop()));
+                    myValues.Add(result);
+
+                    Cache.Insert("values", myValues, null,
+                    DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                }
             }
             catch (NullReferenceException ex)
             {
