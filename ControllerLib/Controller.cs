@@ -38,9 +38,10 @@ namespace ControllerLib
 
         public int calculerPile(Stack<String> pile)
         {
-            int firstNumber = Convert.ToInt32(pile.Pop());
-            String _operator = pile.Pop();
-            int secondNumber = Convert.ToInt32(pile.Pop());
+            Stack<String> maPile = new Stack<string>(pile);
+            int firstNumber = Convert.ToInt32(maPile.Pop());
+            String _operator = maPile.Pop();
+            int secondNumber = Convert.ToInt32(maPile.Pop());
 
             switch (_operator)
             {
