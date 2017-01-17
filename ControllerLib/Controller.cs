@@ -48,11 +48,11 @@ namespace ControllerLib
                 case "+":
                     return firstNumber + secondNumber;
                 case "-":
-                    return firstNumber - secondNumber;
+                    return secondNumber < firstNumber ? firstNumber - secondNumber : -1;
                 case "*":
                     return firstNumber * secondNumber;
                 case "/":
-                    return firstNumber / secondNumber;
+                    return firstNumber%secondNumber == 0 ? firstNumber / secondNumber : -1;
             }
 
             return -1;

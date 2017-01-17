@@ -16,8 +16,8 @@ namespace Mathador
         private Stack<String> pile = new Stack<String>();
         private Controller controller = new Controller();
         private Moteur moteur = new Moteur();
-        public string[] myButtons = {"Button2", "Button3", "Button4", "Button5"}; 
         public List<int> values = new List<int>();
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Cache["values"] == null)
@@ -45,7 +45,6 @@ namespace Mathador
             }
 
             setButtons();
-
         }
 
         protected void ajouterPile(object sender, EventArgs e)
@@ -60,17 +59,29 @@ namespace Mathador
                 if (pile.Count == 3)
                 {
                     int result = controller.calculerPile(pile);
+                    if(result == -1)
+                    {
+                        pile.Clear();
+                        Response.Write("Opération non valable");
+                    } else if (result == (int)Cache["solution"])
+                    {
+                        //TODO this.calculerScore
+                        Cache.Remove(Convert.ToString(Cache["solution"]));
+                        Cache.Remove(Convert.ToString(Cache["values"]));
+                        Cache.Remove(Convert.ToString(Cache["pile"]));
+                    } else
+                    {
+                        List<int> myValues = (List<int>)Cache["values"];
+                        myValues.Remove(Convert.ToInt32(pile.Pop()));
+                        pile.Pop();
+                        myValues.Remove(Convert.ToInt32(pile.Pop()));
+                        myValues.Add(result);
 
-                    List<int> myValues = (List<int>)Cache["values"];
-                    myValues.Remove(Convert.ToInt32(pile.Pop()));
-                    pile.Pop();
-                    myValues.Remove(Convert.ToInt32(pile.Pop()));
-                    myValues.Add(result);
+                        Cache.Insert("values", myValues, null,
+                        DateTime.Now.AddSeconds(300), TimeSpan.Zero);
 
-                    Cache.Insert("values", myValues, null,
-                    DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-
-                    setButtons();
+                        setButtons();
+                    }
                 }
             }
             catch (NullReferenceException ex)
