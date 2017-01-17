@@ -12,11 +12,26 @@
     </div>
 
     <div class="row">
+        <% if (values.Count >= 1)
+            {%>
         <asp:Button ID="Button2" runat="server" OnClick="ajouterPile" />
+        <% }%>
+        <% if (values.Count >= 2)
+            {%>
         <asp:Button ID="Button3" runat="server" OnClick="ajouterPile" />
-        <asp:Button ID="Button4" runat="server" OnClick="ajouterPile" />        
+        <% }%>
+        <% if (values.Count >= 3)
+            {%>
+        <asp:Button ID="Button4" runat="server" OnClick="ajouterPile" />
+        <% }%>
+        <% if (values.Count >= 4)
+            {%>
         <asp:Button ID="Button5" runat="server" OnClick="ajouterPile" />
+        <% }%>
+        <% if (values.Count >= 5)
+            {%>
         <asp:Button ID="Button6" runat="server" OnClick="ajouterPile" />
+        <% }%>
     </div>
 
     <div class="row">

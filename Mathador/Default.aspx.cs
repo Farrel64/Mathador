@@ -16,6 +16,8 @@ namespace Mathador
         private Stack<String> pile = new Stack<String>();
         private Controller controller = new Controller();
         private Moteur moteur = new Moteur();
+        public string[] myButtons = {"Button2", "Button3", "Button4", "Button5"}; 
+        public List<int> values = new List<int>();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Cache["values"] == null)
@@ -25,19 +27,15 @@ namespace Mathador
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
             }
 
-            List<int> values = (List<int>)Cache["values"];
-            Button2.Text = Convert.ToString(values[0]);
-            Button3.Text = Convert.ToString(values[1]);
-            Button4.Text = Convert.ToString(values[2]);
-            Button5.Text = Convert.ToString(values[3]);
-            Button6.Text = Convert.ToString(values[4]);
+            values = (List<int>)Cache["values"];
+
+           
 
             if (Cache["solution"] == null)
             {
                 int solution = moteur.getTargetNumber();
                 Cache.Insert("solution", solution, null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-                Button6.Text = Convert.ToString(solution);
             }
 
             if(Cache["pile"] == null)
@@ -46,6 +44,17 @@ namespace Mathador
                     DateTime.Now.AddSeconds(300), TimeSpan.Zero);
             }
 
+            setButtons();
+
+        }
+
+        public IEnumerable<Control> GetAll(Control control, Type type)
+        {
+            var controls = control.Controls.Cast<Control>();
+
+            return controls.SelectMany(ctrl => GetAll(ctrl, type))
+                                      .Concat(controls)
+                                      .Where(c => c.GetType() == type);
         }
 
         protected void ajouterPile(object sender, EventArgs e)
@@ -69,11 +78,38 @@ namespace Mathador
 
                     Cache.Insert("values", myValues, null,
                     DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+
+                    setButtons();
                 }
             }
             catch (NullReferenceException ex)
             {
                 Response.Write(ex);
+            }
+
+        }
+
+        public void setButtons()
+        {
+            if (values.Count >= 1)
+            {
+                Button2.Text = Convert.ToString(values[0]);
+            }
+            if (values.Count >= 2)
+            {
+                Button3.Text = Convert.ToString(values[1]);
+            }
+            if (values.Count >= 3)
+            {
+                Button4.Text = Convert.ToString(values[2]);
+            }
+            if (values.Count >= 4)
+            {
+                Button5.Text = Convert.ToString(values[3]);
+            }
+            if (values.Count >= 5)
+            {
+                Button6.Text = Convert.ToString(values[4]);
             }
         }
 
