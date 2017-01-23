@@ -36,9 +36,14 @@ namespace Mathador
                 int solution = moteur.getTargetNumber();
                 Cache.Insert("solution", solution, null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                Solution.Text = Convert.ToString(solution);
+            } else
+            {
+                Solution.Text = Convert.ToString(Cache["solution"]);
             }
 
-            if(Cache["pile"] == null)
+
+            if (Cache["pile"] == null)
             {
                 Cache.Insert("pile", pile, null,
                     DateTime.Now.AddSeconds(300), TimeSpan.Zero);
@@ -50,14 +55,43 @@ namespace Mathador
         protected void ajouterPile(object sender, EventArgs e)
         {
             Button senderButton = (Button)sender;
+            
             try
             {
                 pile = (Stack<String>)Cache["pile"];
-                pile.Push(senderButton.Text);
+                if (senderButton.Text.Equals("+") || senderButton.Text.Equals("-") || senderButton.Text.Equals("*") || senderButton.Text.Equals("/"))
+                {
+                    if (pile.Count == 1)
+                    {
+                        pile.Push(senderButton.Text);
+                    }
+                    else
+                    {
+                        pile.Clear();
+                        Response.Write("Opération non valable : l'opérateur doit être en deuxième position");
+                    }
+                }
+                else
+                { 
+                    if (Cache["lastButtonID"] == null || !((String)Cache["lastButtonID"]).Equals(senderButton.ID))
+                    {
+                        pile.Push(senderButton.Text);
+                        Cache.Insert("lastButtonID", senderButton.ID, null,
+                        DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                    }
+                    else
+                    {
+                        pile.Clear();
+                        Response.Write("Opération non valable : vous avez cliqué sur la même valeur");
+                    }
+                }
+
                 Cache.Insert("pile", pile, null,
                     DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+
                 if (pile.Count == 3)
                 {
+                    Cache.Remove("lastButtonID");
                     int result = controller.calculerPile(pile);
                     if(result == -1)
                     {
@@ -66,9 +100,12 @@ namespace Mathador
                     } else if (result == (int)Cache["solution"])
                     {
                         //TODO this.calculerScore
-                        Cache.Remove(Convert.ToString(Cache["solution"]));
-                        Cache.Remove(Convert.ToString(Cache["values"]));
-                        Cache.Remove(Convert.ToString(Cache["pile"]));
+                        Response.Write("Bravo tu as gagné !");
+                        Cache.Remove("lastButtonID");
+                        Cache.Remove("solution");
+                        Cache.Remove("values");
+                        Cache.Remove("pile");
+                        Page.Response.Redirect(Page.Request.RawUrl);
                     } else
                     {
                         List<int> myValues = (List<int>)Cache["values"];
@@ -77,6 +114,8 @@ namespace Mathador
                         myValues.Remove(Convert.ToInt32(pile.Pop()));
                         myValues.Add(result);
 
+
+                        Cache.Remove("lastButtonID");
                         Cache.Insert("values", myValues, null,
                         DateTime.Now.AddSeconds(300), TimeSpan.Zero);
 

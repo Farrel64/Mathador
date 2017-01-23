@@ -41,4 +41,9 @@
         <asp:Button ID="Button10" runat="server" OnClick="ajouterPile" Text="/" />
     </div>
 
+    <div>
+        <asp:TextBox ID="Solution" runat="server"></asp:TextBox>
+
+    </div>
+
 </asp:Content>
