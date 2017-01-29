@@ -16,7 +16,7 @@ namespace Mathador
         private Stack<String> pile = new Stack<String>();
         private Controller controller = new Controller();
         private Moteur moteur = new Moteur();
-        public List<int> values = new List<int>();
+        public List<KeyValuePair<int, List<String>>> values = new List<KeyValuePair<int, List<String>>>();
         
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,16 +29,28 @@ namespace Mathador
 
             if (Cache["values"] == null)
             {
-                List<int> initialValues = moteur.getRandomNumbers();
+                List<int> initialGenValues = moteur.getRandomNumbers();
+                List<KeyValuePair<int, List<String>>> initialValues = new List<KeyValuePair<int, List<String>>>();
+                foreach (int value in initialGenValues)
+                {
+                    initialValues.Add(new KeyValuePair<int, List<String>>(value, new List<string>()));
+                }
                 Cache.Insert("values", initialValues, null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-                Cache.Insert("initialValues", new List<int>(initialValues), null,
+                Cache.Insert("initialValues", new List<KeyValuePair<int, List<String>>>(initialValues), null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
             }
 
-            values = (List<int>)Cache["values"];
+            values = (List<KeyValuePair<int, List<String>>>)Cache["values"];
 
-           
+            if(Cache["score"] != null)
+            {
+                Label4.Text = Convert.ToString(Cache["score"]);
+            } else
+            {
+                Cache.Insert("score", 0, null,
+                                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+            }
 
             if (Cache["solution"] == null)
             {
@@ -77,6 +89,7 @@ namespace Mathador
                     else
                     {
                         pile.Clear();
+                        Cache.Remove("pile");
                         Cache.Remove("lastButtonID");
                         Label4.Text = "Opération non valable : l'opérateur doit être en deuxième position";
                     }
@@ -109,24 +122,55 @@ namespace Mathador
                         pile.Clear();
                         Cache.Remove("lastButtonID");
                         Label4.Text = "Opération non valable";
-                    } else if (result == (int)Cache["solution"])
-                    {
-                        //TODO this.calculerScore
-                        Cache.Remove("lastButtonID");
-                        Cache.Remove("solution");
-                        Cache.Remove("values");
-                        Cache.Remove("pile");
-                        Cache.Remove("initialValues");
-                        Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     } else
                     {
-                        List<int> myValues = (List<int>)Cache["values"];
-                        myValues.Remove(Convert.ToInt32(pile.Pop()));
+                        List<String> myOperators = new List<string>();
+                        List<KeyValuePair<int, List<String>>> myValues = (List<KeyValuePair<int, List<String>>>)Cache["values"];
+                        int n;
+                        foreach (String item in pile)
+                        {
+                            if(int.TryParse(item, out n))
+                            {
+                                foreach (KeyValuePair<int, List<String>> value in myValues)
+                                {
+                                    if(value.Key == Convert.ToInt32(item))
+                                    {
+                                        foreach(String mot in value.Value)
+                                        {
+                                            myOperators.Add(mot);
+                                        }
+                                        myValues.Remove(value);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                 
                         pile.Pop();
-                        myValues.Remove(Convert.ToInt32(pile.Pop()));
-                        myValues.Add(result);
+                        String operateur = pile.Pop();
+                        pile.Pop();
+                        myOperators.Add(operateur);
+                        myValues.Add(new KeyValuePair<int, List<String>>(result, myOperators));
+                        pile.Clear();
 
+                        if (result == (int)Cache["solution"])
+                        {
+                            int score = controller.calculerScore(myOperators);
 
+                            Cache.Remove("lastButtonID");
+                            Cache.Remove("solution");
+                            Cache.Remove("values");
+                            Cache.Remove("pile");
+                            Cache.Remove("initialValues");
+                            Cache.Insert("score", (int)Cache["score"]+score, null,
+                                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+
+                            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
+                            return;
+                        }
+
+                        Cache.Remove("pile");
                         Cache.Remove("lastButtonID");
                         Cache.Insert("values", myValues, null,
                         DateTime.Now.AddSeconds(300), TimeSpan.Zero);
@@ -146,23 +190,23 @@ namespace Mathador
         {
             if (values.Count >= 1)
             {
-                Button2.Text = Convert.ToString(values[0]);
+                Button2.Text = Convert.ToString(values[0].Key);
             }
             if (values.Count >= 2)
             {
-                Button3.Text = Convert.ToString(values[1]);
+                Button3.Text = Convert.ToString(values[1].Key);
             }
             if (values.Count >= 3)
             {
-                Button4.Text = Convert.ToString(values[2]);
+                Button4.Text = Convert.ToString(values[2].Key);
             }
             if (values.Count >= 4)
             {
-                Button5.Text = Convert.ToString(values[3]);
+                Button5.Text = Convert.ToString(values[3].Key);
             }
             if (values.Count >= 5)
             {
-                Button6.Text = Convert.ToString(values[4]);
+                Button6.Text = Convert.ToString(values[4].Key);
             }
         }
 
@@ -178,7 +222,7 @@ namespace Mathador
             Cache.Remove("lastButtonID");
             Cache.Remove("pile");
 
-            List<int> initialValues = new List<int>((List<int>)Cache["initialValues"]);
+            List<KeyValuePair<int, List<String>>> initialValues = new List<KeyValuePair<int, List<String>>>((List < KeyValuePair < int, List < String >>> )Cache["initialValues"]);
 
             Cache.Insert("values", initialValues, null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);

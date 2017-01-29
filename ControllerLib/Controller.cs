@@ -58,6 +58,31 @@ namespace ControllerLib
             return -1;
         }
 
+        public int calculerScore(List<String> operators)
+        {
+            int score = 0;
+
+            foreach(String operateur in operators)
+            {
+                switch (operateur)
+                {
+                    case "+":
+                        score += 1;
+                        break;
+                    case "-":
+                        score += 2;
+                        break;
+                    case "*":
+                        score += 1;
+                        break;
+                    case "/":
+                        score += 3;
+                        break;
+                }
+            }
+            return score;
+        }
+
         public List<KeyValuePair<String, int>> getHighScores()
         {
             List<KeyValuePair<String, int>> highScores = new List<KeyValuePair<string, int>>();
