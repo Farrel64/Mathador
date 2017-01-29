@@ -27,7 +27,7 @@ namespace MoteurLib
             List<int> random = this.getRandomNumbers();
             List<int> newList = new List<int>(random);
             Random rand = new Random();
-            int randCalcul = rand.Next(2, 6);
+            int randCalcul = rand.Next(2, 5);
             List<string> history = new List<string>();
 
             for (int i = 0; i < randCalcul; i++)
@@ -76,7 +76,7 @@ namespace MoteurLib
                         }
 
                     case 4:
-                        if (newList[rand1] > newList[rand2])
+                        if (newList[rand1] > newList[rand2] && newList[rand2] != 0)
                         {
                             if ((newList[rand1] / newList[rand2] % 1) == 0)
                             {

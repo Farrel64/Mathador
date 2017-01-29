@@ -62,7 +62,7 @@ namespace ControllerLib
         {
             List<KeyValuePair<String, int>> highScores = new List<KeyValuePair<string, int>>();
             string _connStr = @"Data Source=localhost; Database=Mathador; User ID=root; Password=''";
-            string _query = "SELECT * FROM user_data ORDER BY score desc LIMIT 5";
+            string _query = "SELECT * FROM user_data ORDER BY score desc LIMIT 10";
             MySqlConnection conn = new MySqlConnection(_connStr);
             MySqlCommand comm = new MySqlCommand(_query, conn);
 

@@ -20,11 +20,11 @@ namespace Mathador
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<KeyValuePair<String, int>> highScores = controller.getHighScores();
+            //List<KeyValuePair<String, int>> highScores = controller.getHighScores();
 
             if (!IsPostBack)
             {
-                Session["time"] = DateTime.Now.AddSeconds(300);
+                Session["time"] = DateTime.Now.AddSeconds(180);
             }
 
             if (Cache["values"] == null)
@@ -77,7 +77,8 @@ namespace Mathador
                     else
                     {
                         pile.Clear();
-                        Response.Write("Opération non valable : l'opérateur doit être en deuxième position");
+                        Cache.Remove("lastButtonID");
+                        Label4.Text = "Opération non valable : l'opérateur doit être en deuxième position";
                     }
                 }
                 else
@@ -91,7 +92,8 @@ namespace Mathador
                     else
                     {
                         pile.Clear();
-                        Response.Write("Opération non valable : vous avez cliqué sur la même valeur");
+                        Cache.Remove("lastButtonID");
+                        Label4.Text = "Opération non valable : vous avez cliqué sur la même valeur";
                     }
                 }
 
@@ -105,16 +107,17 @@ namespace Mathador
                     if(result == -1)
                     {
                         pile.Clear();
-                        Response.Write("Opération non valable");
+                        Cache.Remove("lastButtonID");
+                        Label4.Text = "Opération non valable";
                     } else if (result == (int)Cache["solution"])
                     {
                         //TODO this.calculerScore
-                        Response.Write("Bravo tu as gagné !");
                         Cache.Remove("lastButtonID");
                         Cache.Remove("solution");
                         Cache.Remove("values");
                         Cache.Remove("pile");
-                        Page.Response.Redirect(Page.Request.RawUrl);
+                        Cache.Remove("initialValues");
+                        Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     } else
                     {
                         List<int> myValues = (List<int>)Cache["values"];
@@ -172,7 +175,12 @@ namespace Mathador
 
         protected void Button11_Click(object sender, EventArgs e)
         {
-            Cache.Insert("values", Cache["initialValues"], null,
+            Cache.Remove("lastButtonID");
+            Cache.Remove("pile");
+
+            List<int> initialValues = new List<int>((List<int>)Cache["initialValues"]);
+
+            Cache.Insert("values", initialValues, null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
         }
 
@@ -180,13 +188,13 @@ namespace Mathador
         {
             TimeSpan time1 = new TimeSpan();
             time1 = (DateTime)Session["time"] - DateTime.Now;
-            if (time1.Seconds <= 0)
+            if (time1.Seconds <= 0 && time1.Minutes <=0)
             {
-                Label1.Text = "TimeOut!";
+               Label1.Text = "TimeOut!";
             }
             else
             {
-                Label1.Text = time1.Seconds.ToString();
+                Label1.Text = time1.Minutes.ToString() + ":" + time1.Seconds.ToString();
             }
 
         }
