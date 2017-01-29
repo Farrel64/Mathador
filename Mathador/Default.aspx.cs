@@ -20,10 +20,17 @@ namespace Mathador
         
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                Session["time"] = DateTime.Now.AddSeconds(300);
+            }
+
             if (Cache["values"] == null)
             {
                 List<int> initialValues = moteur.getRandomNumbers();
                 Cache.Insert("values", initialValues, null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                Cache.Insert("initialValues", new List<int>(initialValues), null,
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
             }
 
@@ -159,6 +166,27 @@ namespace Mathador
             string nickname = TextBox1.Text;
             int score = Convert.ToInt32(TextBox2.Text);
             controller.insertResult(nickname, score);
+        }
+
+        protected void Button11_Click(object sender, EventArgs e)
+        {
+            Cache.Insert("values", Cache["initialValues"], null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+        }
+
+        protected void Timer1_Tick(object sender, EventArgs e)
+        {
+            TimeSpan time1 = new TimeSpan();
+            time1 = (DateTime)Session["time"] - DateTime.Now;
+            if (time1.Seconds <= 0)
+            {
+                Label1.Text = "TimeOut!";
+            }
+            else
+            {
+                Label1.Text = time1.Seconds.ToString();
+            }
+
         }
     }
 }

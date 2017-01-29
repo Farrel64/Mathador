@@ -9,8 +9,9 @@
     </div>
     <div class="row">
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click1" Text="Button" />
+        <asp:Button ID="Button11" runat="server"  OnClick="Button11_Click" Text="Reset" />
     </div>
-
+    
     <div class="row">
         <% if (values.Count >= 1)
             {%>
@@ -43,7 +44,9 @@
 
     <div>
         <asp:TextBox ID="Solution" runat="server"></asp:TextBox>
-
+        <asp:Timer ID="Timer1" runat="server" Interval="1000" OnTick="Timer1_Tick">
+        </asp:Timer>
+        <asp:Label ID="Label1" runat="server"></asp:Label>
     </div>
 
 </asp:Content>
