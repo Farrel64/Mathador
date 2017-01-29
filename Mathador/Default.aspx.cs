@@ -20,6 +20,8 @@ namespace Mathador
         
         protected void Page_Load(object sender, EventArgs e)
         {
+            List<KeyValuePair<String, int>> highScores = controller.getHighScores();
+
             if (!IsPostBack)
             {
                 Session["time"] = DateTime.Now.AddSeconds(300);
@@ -62,7 +64,7 @@ namespace Mathador
         protected void ajouterPile(object sender, EventArgs e)
         {
             Button senderButton = (Button)sender;
-            
+
             try
             {
                 pile = (Stack<String>)Cache["pile"];

@@ -52,10 +52,42 @@ namespace ControllerLib
                 case "*":
                     return firstNumber * secondNumber;
                 case "/":
-                    return firstNumber%secondNumber == 0 ? firstNumber / secondNumber : -1;
+                    return firstNumber % secondNumber == 0 ? firstNumber / secondNumber : -1;
             }
 
             return -1;
+        }
+
+        public List<KeyValuePair<String, int>> getHighScores()
+        {
+            List<KeyValuePair<String, int>> highScores = new List<KeyValuePair<string, int>>();
+            string _connStr = @"Data Source=localhost; Database=Mathador; User ID=root; Password=''";
+            string _query = "SELECT * FROM user_data ORDER BY score desc LIMIT 5";
+            MySqlConnection conn = new MySqlConnection(_connStr);
+            MySqlCommand comm = new MySqlCommand(_query, conn);
+
+            try
+            {
+                conn.Open();
+                MySqlDataReader rdr = comm.ExecuteReader();
+                while (rdr.Read())
+                {
+                    highScores.Add(new KeyValuePair<string, int>(rdr.GetString(0), rdr.GetInt32(1)));
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error: {0}", ex.ToString());
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    conn.Close();
+                }
+            }
+
+            return highScores;
         }
     }
 }
