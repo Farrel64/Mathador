@@ -7,14 +7,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - Mon ASP.NET Application</title>
+    <title><%: Page.Title %> - Mathador Equipe 7</title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
+    <link href="~/Content/site.css" rel="stylesheet" type="text/css" media="screen" runat="server" />
 </head>
 <body>
     <form runat="server">
@@ -47,19 +47,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/">Nom de l'application</a>
+                    <a class="navbar-brand" runat="server" href="~/">Mathador Equipe 7</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Accueil</a></li>
-                        <li><a runat="server" href="~/About">À propos de</a></li>
-                        <li><a runat="server" href="~/Contact">Contact</a></li>
-                    </ul>
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a runat="server" href="~/Account/Register">Inscrire</a></li>
-                                <li><a runat="server" href="~/Account/Login">Se connecter</a></li>
+                                <li><a runat="server" href="~/">Jouer</a></li>
+                                <li><a runat="server" href="~/Account/Login">Tableau des scores</a></li>
                             </ul>
                         </AnonymousTemplate>
                         <LoggedInTemplate>

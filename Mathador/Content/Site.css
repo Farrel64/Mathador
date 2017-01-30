@@ -28,6 +28,27 @@ input[type="select"] {
     max-width: 280px;
 }
 
+.top-right{
+    float: right;
+}
+
+.styles{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.top{
+    margin-top: 10px;
+}
+
+.come-back{
+    margin-top: -50px;
+}
+
+input[type=submit]{
+    font-weight: bold;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .jumbotron {

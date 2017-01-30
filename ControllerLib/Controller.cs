@@ -11,7 +11,7 @@ namespace ControllerLib
 {
     public class Controller
     {
-        public void insertResult(string nickname, int score)
+        public void insertResult(string pseudo, int score)
         {
             string _connStr = @"Data Source=localhost; Database=Mathador; User ID=root; Password=''";
             string _query = "INSERT INTO user_data (pseudo,score,date) values(@pseudo,@score,now())";
@@ -21,7 +21,7 @@ namespace ControllerLib
                 {
                     comm.Connection = conn;
                     comm.CommandText = _query;
-                    comm.Parameters.AddWithValue("@pseudo", nickname);
+                    comm.Parameters.AddWithValue("@pseudo", pseudo);
                     comm.Parameters.AddWithValue("@score", score);
                     try
                     {
@@ -114,5 +114,9 @@ namespace ControllerLib
 
             return highScores;
         }
+
+        
+
     }
 }
+

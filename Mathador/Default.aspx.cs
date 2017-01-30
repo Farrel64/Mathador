@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using System.Web.UI.WebControls;
 using ControllerLib;
 using MoteurLib;
+using System.IO;
 
 namespace Mathador
 {
@@ -20,57 +21,10 @@ namespace Mathador
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            //List<KeyValuePair<String, int>> highScores = controller.getHighScores();
-
-            if (!IsPostBack)
-            {
-                Session["time"] = DateTime.Now.AddSeconds(180);
-            }
-
-            if (Cache["values"] == null)
-            {
-                List<int> initialGenValues = moteur.getRandomNumbers();
-                List<KeyValuePair<int, List<String>>> initialValues = new List<KeyValuePair<int, List<String>>>();
-                foreach (int value in initialGenValues)
-                {
-                    initialValues.Add(new KeyValuePair<int, List<String>>(value, new List<string>()));
-                }
-                Cache.Insert("values", initialValues, null,
-                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-                Cache.Insert("initialValues", new List<KeyValuePair<int, List<String>>>(initialValues), null,
-                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-            }
-
-            values = (List<KeyValuePair<int, List<String>>>)Cache["values"];
-
-            if(Cache["score"] != null)
-            {
-                Label4.Text = Convert.ToString(Cache["score"]);
-            } else
-            {
-                Cache.Insert("score", 0, null,
-                                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-            }
-
-            if (Cache["solution"] == null)
-            {
-                int solution = moteur.getTargetNumber();
-                Cache.Insert("solution", solution, null,
-                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-                Solution.Text = Convert.ToString(solution);
-            } else
-            {
-                Solution.Text = Convert.ToString(Cache["solution"]);
-            }
-
-
-            if (Cache["pile"] == null)
-            {
-                Cache.Insert("pile", pile, null,
-                    DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-            }
-
+            List<KeyValuePair<String, int>> highScores = controller.getHighScores();
+            setCache();
             setButtons();
+
         }
 
         protected void ajouterPile(object sender, EventArgs e)
@@ -91,7 +45,7 @@ namespace Mathador
                         pile.Clear();
                         Cache.Remove("pile");
                         Cache.Remove("lastButtonID");
-                        Label4.Text = "Opération non valable : l'opérateur doit être en deuxième position";
+                        Errors.Text = "Opération non valable : l'opérateur doit être en deuxième position";
                     }
                 }
                 else
@@ -106,7 +60,7 @@ namespace Mathador
                     {
                         pile.Clear();
                         Cache.Remove("lastButtonID");
-                        Label4.Text = "Opération non valable : vous avez cliqué sur la même valeur";
+                        Errors.Text = "Opération non valable : vous avez cliqué sur la même valeur";
                     }
                 }
 
@@ -121,7 +75,7 @@ namespace Mathador
                     {
                         pile.Clear();
                         Cache.Remove("lastButtonID");
-                        Label4.Text = "Opération non valable";
+                        Errors.Text = "Opération non valable";
                     } else
                     {
                         List<String> myOperators = new List<string>();
@@ -210,14 +164,7 @@ namespace Mathador
             }
         }
 
-        protected void Button1_Click1(object sender, EventArgs e)
-        {
-            string nickname = TextBox1.Text;
-            int score = Convert.ToInt32(TextBox2.Text);
-            controller.insertResult(nickname, score);
-        }
-
-        protected void Button11_Click(object sender, EventArgs e)
+        protected void Reset_Click(object sender, EventArgs e)
         {
             Cache.Remove("lastButtonID");
             Cache.Remove("pile");
@@ -228,19 +175,89 @@ namespace Mathador
                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
         }
 
+        protected void saveScore(object sender, EventArgs e)
+        {
+            controller.insertResult(Username.Text, Convert.ToInt32(Score.Text));
+        }
+
         protected void Timer1_Tick(object sender, EventArgs e)
         {
             TimeSpan time1 = new TimeSpan();
             time1 = (DateTime)Session["time"] - DateTime.Now;
             if (time1.Seconds <= 0 && time1.Minutes <=0)
             {
-               Label1.Text = "TimeOut!";
+               Chrono.Text = "TimeOut!";
             }
             else
             {
-                Label1.Text = time1.Minutes.ToString() + ":" + time1.Seconds.ToString();
+               Chrono.Text = time1.Minutes.ToString() + ":" + time1.Seconds.ToString();
             }
 
+        }
+
+        protected void setCache()
+        {
+            if (!IsPostBack)
+            {
+                Session["time"] = DateTime.Now.AddSeconds(180);
+            }
+
+            if (Cache["solution"] == null)
+            {
+                int solution = moteur.getTargetNumber();
+                Cache.Insert("solution", solution, null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                Solution.Text = Convert.ToString(solution);
+            }
+            else
+            {
+                Solution.Text = Convert.ToString(Cache["solution"]);
+            }
+
+            if (Cache["values"] == null)
+            {
+                List<int> initialGenValues = moteur.getRandomNumbers();
+                trySolver(initialGenValues);
+                List<KeyValuePair<int, List<String>>> initialValues = new List<KeyValuePair<int, List<String>>>();
+                foreach (int value in initialGenValues)
+                {
+                    initialValues.Add(new KeyValuePair<int, List<String>>(value, new List<string>()));
+                }
+                Cache.Insert("values", initialValues, null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                Cache.Insert("initialValues", new List<KeyValuePair<int, List<String>>>(initialValues), null,
+                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+            }
+
+            values = (List<KeyValuePair<int, List<String>>>)Cache["values"];
+
+            if (Cache["score"] != null)
+            {
+                Score.Text = Convert.ToString(Cache["score"]);
+            }
+            else
+            {
+                Cache.Insert("score", 0, null,
+                                DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+            }
+            
+
+            if (Cache["pile"] == null)
+            {
+                Cache.Insert("pile", pile, null,
+                    DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+            }
+        }
+
+        public void trySolver(List<int> generatedValues)
+        {
+            List<String> results = new List<string>();
+            string calcul = "";
+            //Start solveur
+            moteur.Solveur(results, generatedValues, (int)Cache["solution"], calcul);
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string path = folder + "/testage.txt";
+            File.AppendAllLines(path, results);
         }
     }
 }
