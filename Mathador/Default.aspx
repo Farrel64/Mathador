@@ -49,8 +49,9 @@
             <asp:Timer ID="Timer1" runat="server" Interval="1000" OnTick="Timer1_Tick">
             </asp:Timer>
             <asp:Label ID="Label1" runat="server"></asp:Label>
-            </ContentTemplate>
-        </asp:UpdatePanel>
-    </div>
+    </div>    
+   </ContentTemplate>
+  </asp:UpdatePanel>
+  
 
 </asp:Content>
