@@ -61,6 +61,10 @@ namespace ControllerLib
         public int calculerScore(List<String> operators)
         {
             int score = 0;
+            if(operators.Count == 4)
+            {
+                return 13;
+            }
 
             foreach(String operateur in operators)
             {

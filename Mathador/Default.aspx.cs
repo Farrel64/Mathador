@@ -18,10 +18,11 @@ namespace Mathador
         private Controller controller = new Controller();
         private Moteur moteur = new Moteur();
         public List<KeyValuePair<int, List<String>>> values = new List<KeyValuePair<int, List<String>>>();
-        
+        public List<KeyValuePair<String, int>> highScores = new List<KeyValuePair<String, int>>();
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<KeyValuePair<String, int>> highScores = controller.getHighScores();
+            highScores = controller.getHighScores();
             setCache();
             setButtons();
 

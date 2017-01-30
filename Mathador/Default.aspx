@@ -50,18 +50,19 @@
             <div class="row styles">
                 <span>Nombre à atteindre :</span>
                 <asp:TextBox class="form-control" disabled ID="Solution" runat="server"></asp:TextBox>
-                <asp:UpdatePanel ID="TimerPanel" runat="server">
+     <asp:UpdatePanel ID="TimerPanel" runat="server">
         <ContentTemplate>
                     <div class="top-right">
                         <span>Temps restant :</span>
                         <asp:Timer ID="Timer1" runat="server" Interval="1000" OnTick="Timer1_Tick"></asp:Timer>
                         <asp:Label ID="Chrono" runat="server"></asp:Label>
                     </div>
+            </ContentTemplate>
+    </asp:UpdatePanel>
             <div class="row styles">
                 <asp:Button class="btn btn-primary" ID="Reset" runat="server"  OnClick="Reset_Click" Text="Reset" />
             </div>
             </div>
-        </ContentTemplate>
-    </asp:UpdatePanel>
+        
 
 </asp:Content>
