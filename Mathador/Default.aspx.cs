@@ -30,7 +30,13 @@ namespace Mathador
         protected void ajouterPile(object sender, EventArgs e)
         {
             Button senderButton = (Button)sender;
-
+            TimeSpan time1 = new TimeSpan();
+            time1 = (DateTime)Session["time"] - DateTime.Now;
+            if (time1.Seconds <= 0 && time1.Minutes <= 0)
+            {
+                Errors.Text = "Le temps est écoulé ! Veuillez renseigner votre pseudo !";
+                return;
+            }
             try
             {
                 pile = (Stack<String>)Cache["pile"];
@@ -177,7 +183,15 @@ namespace Mathador
 
         protected void saveScore(object sender, EventArgs e)
         {
+            Cache.Remove("lastButtonID");
+            Cache.Remove("solution");
+            Cache.Remove("values");
+            Cache.Remove("pile");
+            Cache.Remove("initialValues");
+            Cache.Remove("score");
             controller.insertResult(Username.Text, Convert.ToInt32(Score.Text));
+            Page.Response.Redirect(Page.Request.Url.ToString(), true);
+
         }
 
         protected void Timer1_Tick(object sender, EventArgs e)
@@ -239,6 +253,7 @@ namespace Mathador
             {
                 Cache.Insert("score", 0, null,
                                 DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                Score.Text = Convert.ToString(Cache["score"]);
             }
             
 
@@ -256,7 +271,7 @@ namespace Mathador
             //Start solveur
             moteur.Solveur(results, generatedValues, (int)Cache["solution"], calcul);
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string path = folder + "/testage.txt";
+            string path = folder + "/solutions.txt";
             File.AppendAllLines(path, results);
         }
     }

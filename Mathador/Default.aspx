@@ -46,11 +46,12 @@
     </div>
                 </ContentTemplate>
         </asp:UpdatePanel>
-    <asp:UpdatePanel runat="server">
-    <ContentTemplate>
+    
             <div class="row styles">
                 <span>Nombre à atteindre :</span>
                 <asp:TextBox class="form-control" disabled ID="Solution" runat="server"></asp:TextBox>
+                <asp:UpdatePanel ID="TimerPanel" runat="server">
+        <ContentTemplate>
                     <div class="top-right">
                         <span>Temps restant :</span>
                         <asp:Timer ID="Timer1" runat="server" Interval="1000" OnTick="Timer1_Tick"></asp:Timer>
