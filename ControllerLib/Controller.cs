@@ -61,11 +61,12 @@ namespace ControllerLib
         public int calculerScore(List<String> operators)
         {
             int score = 0;
+            //If "Mathador" return 13 points
             if(operators.Count == 4)
             {
                 return 13;
             }
-
+            //else process score
             foreach(String operateur in operators)
             {
                 switch (operateur)
@@ -89,6 +90,7 @@ namespace ControllerLib
 
         public List<KeyValuePair<String, int>> getHighScores()
         {
+            //List of 10 first high scores <pseudo -> score>
             List<KeyValuePair<String, int>> highScores = new List<KeyValuePair<string, int>>();
             string _connStr = @"Data Source=localhost; Database=Mathador; User ID=root; Password=''";
             string _query = "SELECT * FROM user_data ORDER BY score desc LIMIT 10";
@@ -115,12 +117,8 @@ namespace ControllerLib
                     conn.Close();
                 }
             }
-
             return highScores;
         }
-
-        
-
     }
 }
 

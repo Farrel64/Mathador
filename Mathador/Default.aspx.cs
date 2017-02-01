@@ -22,24 +22,27 @@ namespace Mathador
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Initialise Cache and DOM
             highScores = controller.getHighScores();
             setCache();
             setButtons();
-
         }
 
         protected void ajouterPile(object sender, EventArgs e)
         {
             Button senderButton = (Button)sender;
-            TimeSpan time1 = new TimeSpan();
-            time1 = (DateTime)Session["time"] - DateTime.Now;
-            if (time1.Seconds <= 0 && time1.Minutes <= 0)
+            TimeSpan time = new TimeSpan();
+            time = (DateTime)Cache["time"] - DateTime.Now;
+
+            //Check Time Left
+            if (time.Seconds <= 0 && time.Minutes <= 0)
             {
                 Errors.Text = "Le temps est écoulé ! Veuillez renseigner votre pseudo !";
                 return;
             }
             try
             {
+                //Check if the value can be used
                 pile = (Stack<String>)Cache["pile"];
                 if (senderButton.Text.Equals("+") || senderButton.Text.Equals("-") || senderButton.Text.Equals("*") || senderButton.Text.Equals("/"))
                 {
@@ -85,6 +88,7 @@ namespace Mathador
                         Errors.Text = "Opération non valable";
                     } else
                     {
+                        //Process the calcul
                         List<String> myOperators = new List<string>();
                         List<KeyValuePair<int, List<String>>> myValues = (List<KeyValuePair<int, List<String>>>)Cache["values"];
                         int n;
@@ -106,7 +110,8 @@ namespace Mathador
                                 }
                             }
                         }
-                 
+                        
+                        //Add the new value to the list of usable values
                         pile.Pop();
                         String operateur = pile.Pop();
                         pile.Pop();
@@ -118,6 +123,7 @@ namespace Mathador
                         {
                             int score = controller.calculerScore(myOperators);
 
+                            //Clear Cache
                             Cache.Remove("lastButtonID");
                             Cache.Remove("solution");
                             Cache.Remove("values");
@@ -176,6 +182,7 @@ namespace Mathador
             Cache.Remove("lastButtonID");
             Cache.Remove("pile");
 
+            //Reset values to initials ones
             List<KeyValuePair<int, List<String>>> initialValues = new List<KeyValuePair<int, List<String>>>((List < KeyValuePair < int, List < String >>> )Cache["initialValues"]);
 
             Cache.Insert("values", initialValues, null,
@@ -184,37 +191,46 @@ namespace Mathador
 
         protected void saveScore(object sender, EventArgs e)
         {
+            //Clear Cache
             Cache.Remove("lastButtonID");
             Cache.Remove("solution");
             Cache.Remove("values");
             Cache.Remove("pile");
             Cache.Remove("initialValues");
             Cache.Remove("score");
+
+            //Save in DB
             controller.insertResult(Username.Text, Convert.ToInt32(Score.Text));
             Page.Response.Redirect(Page.Request.Url.ToString(), true);
-
         }
 
         protected void Timer1_Tick(object sender, EventArgs e)
         {
-            TimeSpan time1 = new TimeSpan();
-            time1 = (DateTime)Session["time"] - DateTime.Now;
-            if (time1.Seconds <= 0 && time1.Minutes <=0)
+            TimeSpan time = new TimeSpan();
+            if(Cache["time"] != null)
+            {
+                time = (DateTime)Cache["time"] - DateTime.Now;
+            } else
+            {
+                time = DateTime.Now - DateTime.Now;
+            }
+            
+            if (time.Seconds <= 0 && time.Minutes <=0)
             {
                Chrono.Text = "TimeOut!";
             }
             else
             {
-               Chrono.Text = time1.Minutes.ToString() + ":" + time1.Seconds.ToString();
+               Chrono.Text = time.Minutes.ToString() + ":" + time.Seconds.ToString();
             }
-
         }
 
         protected void setCache()
         {
-            if (!IsPostBack)
+            if (Cache["time"] == null)
             {
-                Session["time"] = DateTime.Now.AddSeconds(180);
+                Cache.Insert("time", DateTime.Now.AddSeconds(180), null,
+                DateTime.Now.AddSeconds(200), TimeSpan.Zero);
             }
 
             if (Cache["solution"] == null)
@@ -271,6 +287,7 @@ namespace Mathador
             string calcul = "";
             //Start solveur
             moteur.Solveur(results, generatedValues, (int)Cache["solution"], calcul);
+            //Write solutions in file
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string path = folder + "/solutions.txt";
             File.AppendAllLines(path, results);

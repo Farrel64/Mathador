@@ -13,7 +13,7 @@
         <ContentTemplate>
             <asp:Label ID="Errors" Text="" runat="server" />
    
-    <div class="row">
+    <div class="row top">
         <span>Nombres à dispostion :</span>
         <% if (values.Count >= 1)
             {%>
@@ -63,6 +63,22 @@
                 <asp:Button class="btn btn-primary" ID="Reset" runat="server"  OnClick="Reset_Click" Text="Reset" />
             </div>
             </div>
-        
-
+    <hr />
+    
+    <div class="highscores">
+    <h4>Highscores :</h4>
+    <table class="table">
+        <tr>
+            <th>Pseudo</th>
+            <th>Score</th>
+        </tr>
+        <% foreach (KeyValuePair<String, int> scores in highScores)
+            { %>
+                <tr>
+                    <td><%=scores.Key %></td>
+                    <td><%=scores.Value %></td>
+                </tr>
+           <% } %>
+    </table>
+        </div>
 </asp:Content>
